@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Stapl External API
+  description: API for interacting with the Stapl dashboard's contacts.
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /external/api/v1/row:
+    put:
+      summary: Update an Existing Contacts Row
+      description: Update an already existing contact row on the Stapl dashboard.
+      requestBody:
+        description: JSON data containing the key (email or ID field) and column data
+          for update. Dynamic column names can be provided.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1_row_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation.
+      security:
+      - apiKeyAuth: []
+    post:
+      summary: Add a New Contacts Row
+      description: Add a new entry to the list of contacts on the Stapl dashboard.
+      requestBody:
+        description: JSON data representing the contact details. The keys correspond
+          to the dynamic column names created on the dashboard.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1_row_body_1'
+        required: true
+      responses:
+        "200":
+          description: Successful operation.
+      security:
+      - apiKeyAuth: []
+components:
+  schemas:
+    v1_row_body:
+      type: object
+      properties:
+        Email:
+          type: string
+        Column Name:
+          type: string
+        workflows:
+          type: array
+          items:
+            type: string
+      example:
+        Email: example@example.com
+        Column Name: New Value
+        workflows:
+        - Workflow3
+    v1_row_body_1:
+      type: object
+      properties:
+        workflows:
+          type: array
+          items:
+            type: string
+      additionalProperties: true
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
